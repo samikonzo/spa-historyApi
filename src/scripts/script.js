@@ -1,0 +1,2 @@
+var l = console.log
+
