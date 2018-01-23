@@ -19,8 +19,8 @@ header, footer{
 }
 
 footer{
-	position: absolute;
-	bottom: 0px;
+	/* position: absolute;
+	bottom: 0px; */
 }
 
 
@@ -30,6 +30,7 @@ footer{
 	margin: 0;
 	padding: 0;
 	text-align: center;
+	border: 1px solid;
 	box-sizing: border-box;
 
 	display: flex;
@@ -44,11 +45,18 @@ footer{
 	padding: 0;
 	min-width:250px;
 	line-height:40px;
-	border:1px solid;
+	/* border:1px solid; */
+	border-left: none;
 	box-sizing: border-box;
 	flex: 1 1 250px;
 	transition: .5s;
 	position: relative;
+}
+.nav__item:first-child{
+	/* border-left: 1px solid; */
+}
+.nav__item:hover{
+	background: rgba(67, 99, 10, 0.3)
 }
 
 .nav-nav{
@@ -63,9 +71,11 @@ footer{
 	overflow: hidden;
 	display: flex;
 	justify-content: space-around;
-	transition: .7s .3s;
+	transition: .7s .4s;
 	border: 1px solid;
-	border-top: none;
+	border-top: none; 
+	background: white;
+	/* box-sizing: border-box; */
 }
 .nav__item:hover .nav-nav{
 	height: 40px;
@@ -84,6 +94,5 @@ footer{
 }
 
 .content{
-	margin-top:40px;
 	padding-bottom: 140px;
 }
