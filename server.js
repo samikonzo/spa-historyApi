@@ -23,6 +23,7 @@ app.use((req, res, next) => {
 	l('req.url : ', req.url)
 	l('req.xhr ? ', req.xhr)
 	if(req.method == 'POST') l(req.body)
+		
 	next()
 })
 

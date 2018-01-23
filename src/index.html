@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>SPA History Api</title>
-	<link rel="stylesheet" type="text/css" href="stylesheet.css">
+	<link rel="stylesheet" type="text/css" href="styles/stylesheet.css">
 </head>
 <body>
 	
@@ -11,19 +12,21 @@
 
 	<!-- site.com/gallery/tubes/art005/photo016 -->
 
-	<ul>
-		<li>Main</li>
-		<li>Gallery
-			<ul>
-				<li>pipes</li>
-				<li>sculpts</li>
-				<li>tables</li>
-				<li>other</li>
+	<ul class='nav'>
+		<li class="nav__item" data-link="ajax">Main</li>
+		<li class="nav__item" data-link="ajax">Contacts</li>
+		<li class="nav__item" data-link="ajax"> Gallery
+			<ul class="nav-nav"> 
+				<li class="nav-nav__item"  data-link="ajax">Pipes</li>
+				<li class="nav-nav__item"  data-link="ajax">Sculpts</li>
+				<li class="nav-nav__item"  data-link="ajax">Tables</li>
+				<li class="nav-nav__item"  data-link="ajax">Other</li>
 			</ul>
 		</li>
-		<li>contacts</li>
+		
 	</ul>
 
+	<h2 class="page-title"></h2>
 	<div class="content"></div>
 
 	<footer>footer</footer>
