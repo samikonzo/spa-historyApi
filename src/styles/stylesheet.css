@@ -16,11 +16,39 @@ header, footer{
 	text-align: center;
 	height: 100px;
 	line-height:100px;
+	letter-spacing: 10px;
 }
 
+header{
+	user-select: none;
+	color:black;
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+}
+
+header span{
+	display: inline-block;
+	opacity: 0;
+	max-width:0;
+	color:black;
+	margin-right: 15px;
+	animation: showFullHeaderSpan 1.8s 1s forwards;
+}
+@keyframes showFullHeaderSpan{
+	from{
+		max-width: 0px;
+		opacity: 0;
+	}
+
+	to{
+		opacity: 1;
+		max-width: 100px;
+	}
+}
+
+
 footer{
-	/* position: absolute;
-	bottom: 0px; */
 }
 
 
@@ -62,8 +90,8 @@ footer{
 .nav-nav{
 	list-style-type: none;
 	position: absolute;
-	top:40px;
-	left:-1px;
+	top:0px;
+	left:0px;
 	padding: 0;
 	width:100%;
 	height: 0px;
@@ -71,11 +99,12 @@ footer{
 	overflow: hidden;
 	display: flex;
 	justify-content: space-around;
-	transition: .7s .4s;
-	border: 1px solid;
+	transition: .7s .4s linear;
+	/* border:1px solid; */
+	/* border: 1px solid; */
 	border-top: none; 
-	background: white;
-	/* box-sizing: border-box; */
+	background: lightgrey;
+	box-sizing: border-box; 
 }
 .nav__item:hover .nav-nav{
 	height: 40px;
@@ -85,12 +114,13 @@ footer{
 .nav-nav__item{
 	flex:1 1 25%;
 	position: relative;
-	background: white;
+	/* color: black;
+	background: white; */
 	overflow: hidden;
 }
 
 .nav-nav__item:hover{
-	background: lightgrey;
+	/* background: lightgrey; */
 }
 
 .content{
