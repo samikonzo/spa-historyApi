@@ -1,3 +1,34 @@
 .main{
-	background: red;
+	height: 300px;
+	border: 1px solid;
+	position: relative;
+}
+
+.main-slider__wrapper{
+	height: 300px;
+	width: 100%;
+}
+.main-slider{
+	height: 100%;
+	width: 100%;
+}
+.main-slider__left-arrow, .main-slider__right-arrow{
+	position: absolute;
+	top: 0;
+	width: 100px;
+	height: 300px;
+	line-height: 300px;
+	border: 1px dashed;
+	text-align: center;
+	cursor: pointer;
+	z-index: 2;
+}
+.main-slider__left-arrow{
+	left: 0;
+}
+.main-slider__right-arrow{
+	right: 0;
+}
+.main-slider__image{
+	height: 300px;
 }

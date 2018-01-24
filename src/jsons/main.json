@@ -1,0 +1,33 @@
+{
+	"images" : [
+		{
+			"src" : "images/main/1.jpg",
+			"title" : "space",
+			"href" : "#"
+		},
+
+		{
+			"src" : "images/main/2.jpg",
+			"title" : "girl",
+			"href" : "#"
+		},
+
+		{
+			"src" : "images/main/3.jpg",
+			"title" : "autumn",
+			"href" : "#"
+		},
+
+		{
+			"src" : "images/main/4.gif",
+			"title" : "hands",
+			"href" : "#"
+		},
+
+		{
+			"src" : "images/main/1.jpg",
+			"title" : "feathers",
+			"href" : "#"
+		}
+	]
+}

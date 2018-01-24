@@ -1,9 +1,11 @@
 global.l = console.log
-var express = require('express')
-var app = express()
-var reload = require('reload')
-var bodyParser = require('body-parser')
-var routePages = require('./routePages')
+const express 		= require('express')
+const app 			= express()
+const reload 		= require('reload')
+const bodyParser 	= require('body-parser')
+const routePages 	= require('./routePages')
+const routeImages 	= require('./routeImages')
+const routeJSON 	= require('./routeJSON')
 
 reload(app)
 
@@ -17,38 +19,35 @@ app.use(bodyParser.json())
 
 
 app.use((req, res, next) => {
-	l('  ')
-	l('req.method : ',req.method)
-	l('req.url : ', req.url)
-	l('req.xhr ? ', req.xhr)
-	//if(req.method == 'POST') l(req.body)
+	l(req.method,'req.url : ', req.url)
 	next()
 })
 
-app.use(express.static(__dirname + '/src/'))
+var staticOptions = {
+	/*dotfiles: 'ignore',
+	etag: false,
+	extensions: ['htm', 'html'],
+	index: false,
+	maxAge: '1d',
+	redirect: false,
+	setHeaders: function (res, path, stat) {
+		res.set('x-timestamp', Date.now())
+	}*/
+}
 
+app.use(express.static(__dirname + '/src/', staticOptions))
 
 app.use('/pages', routePages)
 
+app.use('/images', routeImages)
 
+app.use('/getJSON', routeJSON)
 
 app.get('/*', (req, res) => {
-	l('send index.html')
+	//l('send index.html')
 	res.sendFile(__dirname + '/src/index.html')
+	//res.redirect('/')
 })
-
-
-
-
-/*app.post('/simple', (req, res) => {
-	l('simple request')
-	setTimeout(()=>{
-		res.send('bebebe')
-	}, 1000)
-})
-*/
-
-
 
 
 app.listen(3000)

@@ -14,12 +14,11 @@ header, footer{
 	width:100%;
 	border-top:1px solid;
 	text-align: center;
-	height: 100px;
-	line-height:100px;
 	letter-spacing: 10px;
 }
 
 header{
+	line-height:50px;
 	user-select: none;
 	color:black;
 	display: flex;
@@ -28,27 +27,53 @@ header{
 }
 
 header span{
+	position: relative;
 	display: inline-block;
-	opacity: 0;
-	max-width:0;
+	opacity: 1;
+	max-width:10px;
+	overflow: hidden; 
 	color:black;
 	margin-right: 15px;
-	animation: showFullHeaderSpan 1.8s 1s forwards;
+	animation: showFullHeaderSpan 1.8s .5s forwards ease-in-out;
 }
+
 @keyframes showFullHeaderSpan{
 	from{
-		max-width: 0px;
-		opacity: 0;
+		max-width: 10px;
+		opacity: 1;
 	}
 
 	to{
+		max-width: 200px;
 		opacity: 1;
-		max-width: 100px;
 	}
 }
 
+header span::after{
+	content: ' ';
+	position: absolute;
+	top: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	background: linear-gradient(90deg, transparent 10px, white);
+	animation: showFullHeaderSpanAfter 1.8s .5s forwards ease-in-out;
+}
+
+@keyframes showFullHeaderSpanAfter{
+	from{
+		background: linear-gradient(90deg, transparent 10px, white);
+	}
+
+	to{
+		background: linear-gradient(90deg, transparent 100%, white);
+	}
+}
 
 footer{
+	line-height:100px;
+	height: 100px;
 }
 
 
@@ -84,7 +109,7 @@ footer{
 	/* border-left: 1px solid; */
 }
 .nav__item:hover{
-	background: rgba(67, 99, 10, 0.3)
+	background: rgba(0, 0, 0, 0.1)
 }
 
 .nav-nav{
@@ -100,10 +125,8 @@ footer{
 	display: flex;
 	justify-content: space-around;
 	transition: .7s .4s linear;
-	/* border:1px solid; */
-	/* border: 1px solid; */
 	border-top: none; 
-	background: lightgrey;
+	background: rgb(245, 245, 245);
 	box-sizing: border-box; 
 }
 .nav__item:hover .nav-nav{
@@ -114,13 +137,11 @@ footer{
 .nav-nav__item{
 	flex:1 1 25%;
 	position: relative;
-	/* color: black;
-	background: white; */
 	overflow: hidden;
 }
 
 .nav-nav__item:hover{
-	/* background: lightgrey; */
+	background: rgba(0, 0, 0, 0.1);
 }
 
 .content{

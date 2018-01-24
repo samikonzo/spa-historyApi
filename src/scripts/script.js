@@ -28,27 +28,29 @@ var app = (function(){
 				menu: 'gallery'
 			},
 
-			'pipes': {
+			pipes: {
 				title: 'Трубки',
 				menu: 'gallery'
 			},
 
-			'sculpts': {
+			sculpts: {
 				title: 'Скульптуры',
 				menu: 'gallery'
 			},
 
-			'tables': {
+			tables: {
 				title: 'Столовые пренадлежности',
 				menu: 'gallery'
 			},
 
-			'other': {
+			other: {
 				title: 'Разное',
 				menu: 'gallery'
 			},
 		}
 	};
+
+	var apps = {}
 
 	// main handlers
 	function _bindHandlers(){
@@ -85,11 +87,14 @@ var app = (function(){
 	function _loadPage(page){
 		var promise = new Promise((resolve, reject) => {
 			var url = 'pages/' + page
-			var pageTitle = config.pages[page].title
-			var menu = config.pages[page].menu
 
 			l('_loadPage page : ', page)
 			l('url : ', url)
+
+			var pageTitle = config.pages[page].title
+			var menu = config.pages[page].menu
+
+			
 
 			var xhr = new XMLHttpRequest()
 			xhr.open('GET', url)
@@ -116,15 +121,30 @@ var app = (function(){
 
 		promise.then(
 			html => {
+				//deploy new html
 				ui.content.innerHTML = html
+				//check for apps
+				_refreshApps()
 			},
 			error => l(error)
 		)
-		
+	}
+
+	// check some apps on page: sliders, and so..
+	function _refreshApps(){
+		Object.keys(apps).forEach(findApp => {
+			apps[findApp]()
+		})
+	}
+
+	function addApp(app){
+		if(apps[app.name]) return
+		apps[app.name] = app
 	}
 
 	return {
-		init: init
+		init	: init,
+		add 	: addApp
 	}
 })()
 
