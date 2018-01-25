@@ -38,17 +38,19 @@ function Slider(options){
 	var sliderArrowRight = slider.querySelector('.slider__right-arrow')
 	var images;
 	var currentImageNumber = 0;
-	var lastImageBlock;
+	//var lastImageBlock;
 
 	sliderArrowRight && sliderArrowRight.addEventListener('click', e => {
-		showImage(currentImageNumber++, true)
+		currentImageNumber++
+		showImage(true)
 	})	
 
 	sliderArrowLeft && sliderArrowLeft.addEventListener('click', e => {
-		showImage(currentImageNumber--, false)
+		currentImageNumber--
+		showImage(false)
 	})
 
-	function showImage(num, direction = true){
+	function showImage(direction = true){
 		// create new block
 		// template, didnt hear bout?
 		var imgBlock = document.createElement('div')
@@ -61,13 +63,13 @@ function Slider(options){
 		imgTitle.classList.add('slider-imageBlock__image-title')
 
 		//load img
-		if(num > images.length - 1){
-			num = 0
-		} else if(num < 0){
-			num = images.length - 1
+		if(currentImageNumber > images.length - 1){
+			currentImageNumber = 0
+		} else if(currentImageNumber < 0){
+			currentImageNumber = images.length - 1
 		}
 		
-		var currentImage = images[num]
+		var currentImage = images[currentImageNumber]
 
 		img.src = currentImage.src
 		img.setAttribute('href', currentImage.href)
@@ -77,10 +79,10 @@ function Slider(options){
 			setTimeout(() => {
 				if(direction){
 					imgBlock.classList.remove('slider-imageBlock--right')
-					lastImageBlock && lastImageBlock.classList.add('slider-imageBlock--left')
+					//lastImageBlock && lastImageBlock.classList.add('slider-imageBlock--left')
 				} else {
 					imgBlock.classList.remove('slider-imageBlock--left')
-					lastImageBlock && lastImageBlock.classList.add('slider-imageBlock--right')
+					//lastImageBlock && lastImageBlock.classList.add('slider-imageBlock--right')
 				}
 			}, 100)
 		}
@@ -101,12 +103,13 @@ function Slider(options){
 	}
 
 
-	var path = 'getJSON/' + location.pathname.substr(1) // change for something
+	// get data and show first img
+	var path = 'getJSON/' + (location.pathname.substr(1) || app.getMainPage())// change for something
 	getData(path)
 		.then(
 			json => {
 				images = JSON.parse(json).images
-				showImage(0);
+				showImage();
 			},
 			err => {
 				l(err)
@@ -131,6 +134,5 @@ function getData(path){
 				reject(err)
 			}
 		}
-		l('sended : ', path)
 	})
 }

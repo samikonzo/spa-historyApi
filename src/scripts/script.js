@@ -67,7 +67,7 @@ var app = (function(){
 	// initialisation
 	function init(){
 		var page = document.location.pathname.substr(1) || config.mainPage
-		_loadPage(page)
+		_loadPage(page, true)
 		_bindHandlers()
 	}
 
@@ -84,12 +84,22 @@ var app = (function(){
 		_loadPage(page)
 	}
 
-	function _loadPage(page){
+	function _loadPage(page, init=false){
+		// prevent reload page by clicking on current link
+		if(!init && page == location.pathname.substr(1)){
+			l(`from ${page} to ${page}`)
+			return
+		} else if(!init && page == config.mainPage && location.pathname.substr(1) == ''){
+			l('from mainPage to mainPage')
+			return
+		}
+
+		// promise
 		var promise = new Promise((resolve, reject) => {
 			var url = 'pages/' + page
 
-			l('_loadPage page : ', page)
-			l('url : ', url)
+			//l('_loadPage page : ', page)
+			//l('url : ', url)
 
 			var pageTitle = config.pages[page].title
 			var menu = config.pages[page].menu
@@ -101,7 +111,6 @@ var app = (function(){
 			xhr.send()
 			xhr.onload = function(){
 				if(this.status == 200){
-					l('ok')
 					resolve(this.response)
 				} else {
 					var err = new Error(this.statusText)
@@ -137,14 +146,21 @@ var app = (function(){
 		})
 	}
 
+	// add apps fo refreshing
 	function addApp(app){
 		if(apps[app.name]) return
 		apps[app.name] = app
 	}
 
+	// return mainPage
+	function getMainPage(){
+		return config.mainPage
+	}
+
 	return {
-		init	: init,
-		add 	: addApp
+		init		: init,
+		add 		: addApp,
+		getMainPage : getMainPage,
 	}
 })()
 

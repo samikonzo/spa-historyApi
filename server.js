@@ -49,5 +49,9 @@ app.get('/*', (req, res) => {
 	//res.redirect('/')
 })
 
+app.post('/*', (req, res) => {
+	l('def app.post')
+})
+
 
 app.listen(3000)
