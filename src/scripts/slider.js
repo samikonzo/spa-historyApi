@@ -36,7 +36,8 @@ function Slider(options){
 	var sliderWrapper = slider.parentElement
 	var sliderArrowLeft = slider.querySelector('.slider__left-arrow')
 	var sliderArrowRight = slider.querySelector('.slider__right-arrow')
-	var images;
+	var images
+	var distance
 	var currentImageNumber = -1;
 	//var lastImageBlock;
 
@@ -54,9 +55,9 @@ function Slider(options){
 		var target = e.target
 		var startX = e.clientX 
 		var startPosition = startX
-		var startTime = performance.now()
 		var slideDirection
 		var targetImgBlock
+		var distanceForChange = 150
 		slider.dragged = false
 
 		if(target == sliderArrowLeft || target == sliderArrowRight || target == e.currentTarget) return
@@ -64,15 +65,15 @@ function Slider(options){
 		targetImgBlock = target.closest('.slider-imageBlock')
 		startX -= +getComputedStyle(targetImgBlock).left.match(/-?\d+/)[0]
 
-		document.body.addEventListener('mousemove', slideImageBlock)
-		document.body.addEventListener('mouseup', stopSlideImageBlock)
+		document.body.addEventListener('mousemove', moveImageBlock)
+		document.body.addEventListener('mouseup', stopMoveImageBlock)
 		
 
-		//add left and right elements
+		//add left and right elements ??
 
 
 
-		function slideImageBlock(e){
+		function moveImageBlock(e){
 			if(!slider.dragged && Math.abs(e.clientX - startX) > 3){
 				slider.dragged = true
 				targetImgBlock.style.transition = '0s'
@@ -84,45 +85,49 @@ function Slider(options){
 				slideDirection = false
 
 				 // cuz direction changed
-				startTime = performance.now()
 				startPosition = e.clientX
 
 			} else if(e.clientX < startX && slideDirection != true){
 				slideDirection = true
 
 				 // cuz direction changed
-				startTime = performance.now()
 				startPosition = e.clientX
 			}
 
 
+			distance = startPosition - e.clientX
+			//highlighting arrow
+			if(distance > distanceForChange){
+				sliderArrowRight.classList.add('slider__right-arrow--highlight')
+				sliderArrowLeft.classList.remove('slider__left-arrow--highlight')
+			} else if(distance < -distanceForChange){
+				sliderArrowLeft.classList.add('slider__left-arrow--highlight')
+				sliderArrowRight.classList.remove('slider__right-arrow--highlight')
+			} else {
+				sliderArrowRight.classList.remove('slider__right-arrow--highlight')
+				sliderArrowLeft.classList.remove('slider__left-arrow--highlight')
+			}
+
 			targetImgBlock.style.left = Math.floor(e.clientX  - startX) + 'px' 
 		}
 
-		function stopSlideImageBlock(e){
-			document.body.removeEventListener('mousemove', slideImageBlock)
-			document.body.removeEventListener('mouseup', stopSlideImageBlock)
+		function stopMoveImageBlock(e){
+			document.body.removeEventListener('mousemove', moveImageBlock)
+			document.body.removeEventListener('mouseup', stopMoveImageBlock)
 
-			//targetImgBlock.style.transition = '';
+			targetImgBlock.style.transition = '';
 			slider.dragged = false
-			var distance = Math.abs(startPosition - e.clientX)
-			if(distance > 50)	showImage(slideDirection)
-			else {}// return to old position
-			/*var distance = Math.abs(startPosition - e.clientX) //px
-			var time = (performance.now() - startTime) / 1000 //s
-			var speed = distance / (time*2)
-			var transitionTime = targetImgBlock.offsetWidth / speed;
-			l('speed :', speed, 'px/s')
-			l('transition time :', transitionTime, 's')
 
-			targetImgBlock.style.transition = transitionTime.toFixed(1) + 's' 
-			targetImgBlock.style.transitionTimingFunction = 'linear'
+			distance = Math.abs(startPosition - e.clientX)
+			if(distance > distanceForChange){
+				showImage(slideDirection)
+			}
+			else {
+				targetImgBlock.style.left = '0px';
+			}
 
-			setTimeout(()=>{
-				targetImgBlock.style.left = slideDirection 	? -targetImgBlock.offsetWidth + 'px' 
-															: targetImgBlock.offsetWidth + 'px'
-			}, 0)*/
-
+			sliderArrowRight.classList.remove('slider__right-arrow--highlight')
+			sliderArrowLeft.classList.remove('slider__left-arrow--highlight')
 		}
 	})
 
@@ -137,7 +142,7 @@ function Slider(options){
 		var imgTitle = document.createElement('div')
 		
 		imgBlock.classList.add('slider-imageBlock')
-		img.classList = ['slider-imageBlock__image slider-imageBlock__image--hidden']
+		img.classList = 'slider-imageBlock__image slider-imageBlock__image--hidden'
 		imgTitle.classList.add('slider-imageBlock__image-title')
 
 		//load img
@@ -160,40 +165,6 @@ function Slider(options){
 		img.setAttribute('href', currentImage.href)
 		img.onload = function(){
 			img.classList.remove('slider-imageBlock__image--hidden')
-
-			setTimeout(() => {
-				if(direction){
-					imgBlock.classList.remove('slider-imageBlock--right');
-
-					[].forEach.call(currentBlocks, block => {
-						block.style.left = ''
-						block.style.transition = ''
-
-						setTimeout(()=>{
-							block.classList.add('slider-imageBlock--left')
-							block.addEventListener('transitionend', function(){
-								this.remove()
-							})
-						}, 10)
-					})
-					//lastImageBlock && lastImageBlock.classList.add('slider-imageBlock--left')
-				} else {
-					imgBlock.classList.remove('slider-imageBlock--left');
-
-					[].forEach.call(currentBlocks, block => {
-						block.style.left = ''
-						block.style.transition = ''
-
-						setTimeout(()=>{
-							block.classList.add('slider-imageBlock--right')
-							block.addEventListener('transitionend', function(){
-								this.remove()
-							})
-						}, 10)
-					})
-					//lastImageBlock && lastImageBlock.classList.add('slider-imageBlock--right')
-				}
-			}, 50)
 		}
 		imgTitle.innerHTML = currentImage.title
 
@@ -209,6 +180,45 @@ function Slider(options){
 
 		//deploy imgBlock
 		slider.appendChild(imgBlock)
+
+		//slide to new slide
+		setTimeout(() => {
+			if(direction){
+				imgBlock.classList.remove('slider-imageBlock--right');
+
+				[].forEach.call(currentBlocks, block => {
+					block.style.left = ''
+					block.style.transition = ''
+
+					setTimeout(()=>{
+						block.classList.add('slider-imageBlock--left')
+						block.addEventListener('transitionend', function(e){
+							if(e.propertyName == 'left'){
+								this.remove()
+							}
+						})
+					}, 10)
+				})
+
+			} else {
+				imgBlock.classList.remove('slider-imageBlock--left');
+
+				[].forEach.call(currentBlocks, block => {
+					block.style.left = ''
+					block.style.transition = ''
+
+					setTimeout(()=>{
+						block.classList.add('slider-imageBlock--right')
+						block.addEventListener('transitionend', function(e){
+							if(e.propertyName == 'left'){
+								this.remove()
+							}
+						})
+					}, 10)
+				})
+
+			}
+		}, 50)
 	}
 
 
