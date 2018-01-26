@@ -164,5 +164,14 @@ var app = (function(){
 	}
 })()
 
+function showHeader(){
+	var header = document.getElementsByTagName('header')[0]
+	header.classList.remove('header--hidden')
+}
 
-document.addEventListener('DOMContentLoaded', app.init)
+document.addEventListener('DOMContentLoaded', () => {
+	app.init()
+
+	setTimeout(showHeader, 1000)
+})
+

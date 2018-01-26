@@ -30,14 +30,15 @@ header span{
 	position: relative;
 	display: inline-block;
 	opacity: 1;
-	max-width:10px;
+	max-width:auto;
 	overflow: hidden; 
 	color:black;
 	margin-right: 15px;
-	animation: showFullHeaderSpan 1.8s .5s forwards ease-in-out;
+	transition: 1s;
+	/* animation: showFullHeaderSpan 1.8s .5s forwards ease-in-out; */
 }
 
-@keyframes showFullHeaderSpan{
+/* @keyframes showFullHeaderSpan{
 	from{
 		max-width: 10px;
 		opacity: 1;
@@ -47,6 +48,10 @@ header span{
 		max-width: 200px;
 		opacity: 1;
 	}
+} */
+
+.header--hidden span{
+	max-width:10px;
 }
 
 header span::after{
@@ -58,10 +63,10 @@ header span::after{
 	height: 100%;
 	box-sizing: border-box;
 	background: linear-gradient(90deg, transparent 10px, white);
-	animation: showFullHeaderSpanAfter 1.8s .5s forwards ease-in-out;
+	/* animation: showFullHeaderSpanAfter 1.8s .5s forwards ease-in-out; */
 }
 
-@keyframes showFullHeaderSpanAfter{
+/* @keyframes showFullHeaderSpanAfter{
 	from{
 		background: linear-gradient(90deg, transparent 10px, white);
 	}
@@ -70,7 +75,7 @@ header span::after{
 		background: linear-gradient(90deg, transparent 100%, white);
 	}
 }
-
+ */
 footer{
 	line-height:100px;
 	height: 100px;
