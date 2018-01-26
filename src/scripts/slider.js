@@ -1,21 +1,5 @@
 var l = console.log
 
-/*
-slider
-slider__wrapper
-slider__left-arrow
-slider__right-arrow
-slider__image
-*/
-
-/*
-var options = {
-	elem: elem,
-	autoslide: true, 
-	autoslideTiem: 2000, //ms
-}
-*/
-
 
 document.addEventListener('DOMContentLoaded', () => {
 	app.add(findSlider)
@@ -26,7 +10,8 @@ function findSlider(){
 
 	sliders.forEach(slider => {
 		new Slider({
-			elem: slider
+			elem: slider,
+			autoslide: true
 		})
 	})
 }
@@ -39,7 +24,21 @@ function Slider(options){
 	var images
 	var distance
 	var currentImageNumber = -1;
-	//var lastImageBlock;
+
+	// get data and show first img
+	var path = 'getJSON/' + (location.pathname.substr(1) || app.getMainPage())// change for something
+	getData(path)
+		.then(
+			json => {
+				images = JSON.parse(json).images
+				showImage();
+			},
+			err => {
+				l(err)
+			}
+		)
+
+
 
 	// main binds
 	sliderArrowRight && sliderArrowRight.addEventListener('click', e => {
@@ -53,82 +52,88 @@ function Slider(options){
 	slider.addEventListener('mousedown', e => {
 		e.preventDefault()
 		var target = e.target
-		var startX = e.clientX 
-		var startPosition = startX
+		var startX = e.clientX
 		var slideDirection
-		var targetImgBlock
-		var distanceForChange = 150
-		slider.dragged = false
+		var distance = 0
+		var distanceForChange = 100
+		var imgBlocks = slider.querySelectorAll('.slider-imageBlock')
+		var imgBlock = imgBlocks[imgBlocks.length-1];
+		var startImgBlockLeft = getComputedStyle(imgBlock).left.match(/-?\d+/)[0]
 
-		if(target == sliderArrowLeft || target == sliderArrowRight || target == e.currentTarget) return
 
-		targetImgBlock = target.closest('.slider-imageBlock')
-		startX -= +getComputedStyle(targetImgBlock).left.match(/-?\d+/)[0]
-
+		// main listeners
 		document.body.addEventListener('mousemove', moveImageBlock)
+		document.body.addEventListener('mouseout', checkForWindowLeave)
 		document.body.addEventListener('mouseup', stopMoveImageBlock)
-		
-
-		//add left and right elements ??
-
 
 
 		function moveImageBlock(e){
+			// drag slide
 			if(!slider.dragged && Math.abs(e.clientX - startX) > 3){
 				slider.dragged = true
-				targetImgBlock.style.transition = '0s'
+				imgBlock.style.transition = '0s'
+				imgBlock.style.cursor = 'default'
 			}
 			if(!slider.dragged) return
 
 
+			// tuning slideDirection
 			if(e.clientX > startX && slideDirection != false){
 				slideDirection = false
-
-				 // cuz direction changed
-				startPosition = e.clientX
-
 			} else if(e.clientX < startX && slideDirection != true){
 				slideDirection = true
-
-				 // cuz direction changed
-				startPosition = e.clientX
 			}
 
+			/*
+				//highlighting arrow
+				if(distance > distanceForChange){
+					sliderArrowRight.classList.add('slider__right-arrow--highlight')
+					sliderArrowLeft.classList.remove('slider__left-arrow--highlight')
+				} else if(distance < -distanceForChange){
+					sliderArrowLeft.classList.add('slider__left-arrow--highlight')
+					sliderArrowRight.classList.remove('slider__right-arrow--highlight')
+				} else {
+					sliderArrowRight.classList.remove('slider__right-arrow--highlight')
+					sliderArrowLeft.classList.remove('slider__left-arrow--highlight')
+				}
+			*/
 
-			distance = startPosition - e.clientX
-			//highlighting arrow
-			if(distance > distanceForChange){
-				sliderArrowRight.classList.add('slider__right-arrow--highlight')
-				sliderArrowLeft.classList.remove('slider__left-arrow--highlight')
-			} else if(distance < -distanceForChange){
-				sliderArrowLeft.classList.add('slider__left-arrow--highlight')
-				sliderArrowRight.classList.remove('slider__right-arrow--highlight')
-			} else {
-				sliderArrowRight.classList.remove('slider__right-arrow--highlight')
-				sliderArrowLeft.classList.remove('slider__left-arrow--highlight')
+
+			// move imgBlock
+			var newLeft = +startImgBlockLeft + e.clientX - startX
+			imgBlock.style.left = newLeft + 'px';
+		}
+
+		function checkForWindowLeave(e){
+			if(e.relatedTarget == null || e.relatedTarget == document.documentElement){
+				stopMoveImageBlock(e)
 			}
-
-			targetImgBlock.style.left = Math.floor(e.clientX  - startX) + 'px' 
 		}
 
 		function stopMoveImageBlock(e){
 			document.body.removeEventListener('mousemove', moveImageBlock)
+			document.body.removeEventListener('mouseout', checkForWindowLeave)
 			document.body.removeEventListener('mouseup', stopMoveImageBlock)
 
-			targetImgBlock.style.transition = '';
+			imgBlock.style.transition = ''
+			imgBlock.style.cursor = ''
 			slider.dragged = false
 
-			distance = Math.abs(startPosition - e.clientX)
-			if(distance > distanceForChange){
-				showImage(slideDirection)
-			}
-			else {
-				targetImgBlock.style.left = '0px';
+			distance = Math.abs(startX - e.clientX)
+			
+			if(distance < 2 && e.target != sliderArrowLeft && e.target != sliderArrowRight){
+				l(imgBlock.href)
+				app.navigate(imgBlock.href)
+				return
 			}
 
-			sliderArrowRight.classList.remove('slider__right-arrow--highlight')
-			sliderArrowLeft.classList.remove('slider__left-arrow--highlight')
+			if(distance > distanceForChange){
+				if(slideDirection !== undefined) showImage(slideDirection)
+			} else {
+				imgBlock.style.left = '0px';
+			}
 		}
+		
 	})
 
 
@@ -152,22 +157,26 @@ function Slider(options){
 			currentImageNumber--
 		}
 
-
+		// change number
 		if(currentImageNumber > images.length - 1){
 			currentImageNumber = 0
 		} else if(currentImageNumber < 0){
 			currentImageNumber = images.length - 1
 		}
 		
+		// current = last of images
 		var currentImage = images[currentImageNumber]
 
+		// img parameters
 		img.src = currentImage.src
 		img.setAttribute('href', currentImage.href)
+		imgBlock.href = currentImage.href
 		img.onload = function(){
 			img.classList.remove('slider-imageBlock__image--hidden')
 		}
 		imgTitle.innerHTML = currentImage.title
 
+		//add img & imgTitle to imgBlock
 		imgBlock.appendChild(img)
 		imgBlock.appendChild(imgTitle)
 
@@ -181,67 +190,45 @@ function Slider(options){
 		//deploy imgBlock
 		slider.appendChild(imgBlock)
 
+
 		//slide to new slide
+		var sideForOldImgBlock
 		setTimeout(() => {
 			if(direction){
-				imgBlock.classList.remove('slider-imageBlock--right');
-
-				[].forEach.call(currentBlocks, block => {
-					block.style.left = ''
-					block.style.transition = ''
-
-					setTimeout(()=>{
-						block.classList.add('slider-imageBlock--left')
-						block.addEventListener('transitionend', function(e){
-							if(e.propertyName == 'left'){
-								this.remove()
-							}
-						})
-					}, 10)
-				})
+				sideForOldImgBlock = 'left'
 
 			} else {
-				imgBlock.classList.remove('slider-imageBlock--left');
+				sideForOldImgBlock = 'right'
+			}
 
-				[].forEach.call(currentBlocks, block => {
-					block.style.left = ''
-					block.style.transition = ''
+			imgBlock.classList.remove('slider-imageBlock--right');
+			imgBlock.classList.remove('slider-imageBlock--left');
+			[].forEach.call(currentBlocks, block => {
+					if(!block.directed){
+						block.directed = true
+						block.style.left = ''
+						block.style.transition = ''
 
-					setTimeout(()=>{
-						block.classList.add('slider-imageBlock--right')
-						block.addEventListener('transitionend', function(e){
-							if(e.propertyName == 'left'){
-								this.remove()
-							}
-						})
-					}, 10)
+						setTimeout(()=>{
+							block.classList.add('slider-imageBlock--' + sideForOldImgBlock)
+							block.style.opacity = 0;
+							block.addEventListener('transitionend', function(e){
+								if(e.propertyName == 'left'){
+									this.remove()
+								}
+							})
+						}, 10)
+					}
 				})
 
-			}
 		}, 50)
 	}
-
-
-	// get data and show first img
-	var path = 'getJSON/' + (location.pathname.substr(1) || app.getMainPage())// change for something
-	getData(path)
-		.then(
-			json => {
-				images = JSON.parse(json).images
-				showImage();
-			},
-			err => {
-				l(err)
-			}
-		)
-
 
 }
 
 function getData(path){
 	return new Promise( (resolve, reject) => {
 		var xhr = new XMLHttpRequest()
-		//xhr.responseType = 'json'
 		xhr.open('POST', path)
 		xhr.send()
 		xhr.onload = function(){
@@ -255,3 +242,4 @@ function getData(path){
 		}
 	})
 }
+

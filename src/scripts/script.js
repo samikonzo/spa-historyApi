@@ -79,6 +79,11 @@ var app = (function(){
 		history.pushState({page: page}, null, page);
 	}
 
+	function navigateFromOutSpace(href){
+		_loadPage(href)
+		history.pushState({page: href}, null, href);
+	}
+
 	function _popState(e){
 		var page = (e.state && e.state.page) || config.mainPage;
 		_loadPage(page)
@@ -161,6 +166,7 @@ var app = (function(){
 		init		: init,
 		add 		: addApp,
 		getMainPage : getMainPage,
+		navigate 	: navigateFromOutSpace
 	}
 })()
 

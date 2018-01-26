@@ -1,4 +1,7 @@
-.slider{}
+.slider{
+	height: 100%;
+	width: 100%;
+}
 .slider__wrapper{
 	position: relative;
 	width:100%;
@@ -13,10 +16,11 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
-	/*background: rgba(0,0,0, 0.2); */
-	 background: white; 
+	/* background: rgba(0,0,0, 0.7);  */
+	background: white; 
 	z-index: 1;
 	transition: 1s;
+	cursor: pointer;
 
 	display: flex;
 	justify-content: center;
@@ -62,6 +66,7 @@
 }	
 
 .slider__left-arrow, .slider__right-arrow{
+	/* display: none; */
 	position: absolute;
 	top: 0;
 	width: 100px;
