@@ -7,6 +7,8 @@ var app = (function(){
 		nav: document.body.querySelector('.nav'),
 		pageTitle: document.body.querySelector('.page-title'),
 		content: document.body.querySelector('.content'),
+		contentWrapper: document.body.querySelector('.content-wrapper')
+
 	};
 
 	var config = {
@@ -76,23 +78,30 @@ var app = (function(){
 		var page = e.target.getAttribute('href')
 		l('_navigate page :', page)
 		_loadPage(page)
+
 		history.pushState({page: page}, null, page);
 	}
 
 	function navigateFromOutSpace(href){
 		_loadPage(href)
+
 		history.pushState({page: href}, null, href);
 	}
 
 	function _popState(e){
+		l('_popState')
 		var page = (e.state && e.state.page) || config.mainPage;
-		_loadPage(page)
+		_loadPage(page, true)
 	}
 
 	function _loadPage(page, init=false){
+		// init means that page loaded from init function
+
 		// prevent reload page by clicking on current link
 		if(!init && page == location.pathname.substr(1)){
 			l(`from ${page} to ${page}`)
+			l('page : ', page)
+			l('location.pathname.substr(1) : ', location.pathname.substr(1))
 			return
 		} else if(!init && page == config.mainPage && location.pathname.substr(1) == ''){
 			l('from mainPage to mainPage')
@@ -102,13 +111,8 @@ var app = (function(){
 		// promise
 		var promise = new Promise((resolve, reject) => {
 			var url = 'pages/' + page
-
-			//l('_loadPage page : ', page)
-			//l('url : ', url)
-
 			var pageTitle = config.pages[page].title
 			var menu = config.pages[page].menu
-
 			
 
 			var xhr = new XMLHttpRequest()
@@ -133,15 +137,68 @@ var app = (function(){
 			}
 		})
 
+
 		promise.then(
-			html => {
-				//deploy new html
-				ui.content.innerHTML = html
-				//check for apps
-				_refreshApps()
-			},
+			html => replaceContent(html),
 			error => l(error)
 		)
+	}
+
+	function replaceContent(html){
+		if(!ui.content.innerHTML){ // no old html
+			ui.content.style.opacity = 0
+
+			setTimeout(()=>{
+				ui.content.style.transition = '1s'
+				setTimeout(() => {
+					//deploy new html
+					ui.content.innerHTML = html
+					//check for apps
+					_refreshApps()
+
+					//dont work here
+					//idk why, css...
+					//resizeContentWrapper()
+
+					ui.content.style.opacity = 1
+
+					setTimeout(() => {
+						ui.content.style.transition = ''
+						resizeContentWrapper()												
+					},1000)
+				}, 100)
+
+			}, 10)
+
+		} else { //remove old html
+			ui.content.style.transition = '1s'
+			setTimeout(()=>{
+				ui.content.style.opacity = 0
+
+				setTimeout(() => {
+					//deploy new html
+					ui.content.innerHTML = html
+					//check for apps
+					_refreshApps()
+
+					//dont work here
+					//idk why, css...
+					//resizeContentWrapper()
+
+					ui.content.style.opacity = 1
+
+					setTimeout(() => {
+						ui.content.style.transition = ''	
+						resizeContentWrapper()
+					},1000)
+				}, 1000)
+			}, 10)
+		}
+
+		function resizeContentWrapper(){
+			l('height : ',ui.content.offsetHeight)
+			ui.contentWrapper.style.height = ui.content.offsetHeight + 'px';
+		}		
 	}
 
 	// check some apps on page: sliders, and so..

@@ -27,17 +27,15 @@ function Slider(options){
 
 	// get data and show first img
 	var path = 'getJSON/' + (location.pathname.substr(1) || app.getMainPage())// change for something
-	getData(path)
-		.then(
-			json => {
-				images = JSON.parse(json).images
-				showImage();
-			},
-			err => {
-				l(err)
-			}
-		)
-
+	getData(path).then(
+		json => {
+			images = JSON.parse(json).images
+			showImage();
+		},
+		err => {
+			l(err)
+		}
+	)
 
 
 	// main binds
@@ -49,7 +47,11 @@ function Slider(options){
 		showImage(false)
 	})
 
+	slider.addEventListener('click', e => e.preventDefault)
+
 	slider.addEventListener('mousedown', e => {
+		if(e.button !== 0) return
+
 		e.preventDefault()
 		var target = e.target
 		var startX = e.clientX
@@ -84,19 +86,19 @@ function Slider(options){
 				slideDirection = true
 			}
 
-			/*
-				//highlighting arrow
-				if(distance > distanceForChange){
-					sliderArrowRight.classList.add('slider__right-arrow--highlight')
-					sliderArrowLeft.classList.remove('slider__left-arrow--highlight')
-				} else if(distance < -distanceForChange){
-					sliderArrowLeft.classList.add('slider__left-arrow--highlight')
-					sliderArrowRight.classList.remove('slider__right-arrow--highlight')
-				} else {
-					sliderArrowRight.classList.remove('slider__right-arrow--highlight')
-					sliderArrowLeft.classList.remove('slider__left-arrow--highlight')
-				}
-			*/
+			
+			//highlighting arrow
+			if(distance > distanceForChange){
+				//sliderArrowRight.classList.add('slider__right-arrow--highlight')
+				//sliderArrowLeft.classList.remove('slider__left-arrow--highlight')
+			} else if(distance < -distanceForChange){
+				//sliderArrowLeft.classList.add('slider__left-arrow--highlight')
+				//sliderArrowRight.classList.remove('slider__right-arrow--highlight')
+			} else {
+				//sliderArrowRight.classList.remove('slider__right-arrow--highlight')
+				//sliderArrowLeft.classList.remove('slider__left-arrow--highlight')
+			}
+			
 
 
 			// move imgBlock
@@ -121,8 +123,9 @@ function Slider(options){
 
 			distance = Math.abs(startX - e.clientX)
 			
+			//redirect if only click
 			if(distance < 2 && e.target != sliderArrowLeft && e.target != sliderArrowRight){
-				l(imgBlock.href)
+				//l(imgBlock.href)
 				app.navigate(imgBlock.href)
 				return
 			}
@@ -133,7 +136,6 @@ function Slider(options){
 				imgBlock.style.left = '0px';
 			}
 		}
-		
 	})
 
 

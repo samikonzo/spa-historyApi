@@ -28,6 +28,13 @@
 			"src" : "images/main/5.jpg",
 			"title" : "feathers",
 			"href" : "gallery"
+		},
+
+		{
+			"src" : "images/pipes/pipe_1/1.png",
+			"title" : "tube #1",
+			"href" : "pipes"
+
 		}
 	]
 }

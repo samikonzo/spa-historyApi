@@ -3,9 +3,11 @@ const express 		= require('express')
 const app 			= express()
 const reload 		= require('reload')
 const bodyParser 	= require('body-parser')
+
 const routePages 	= require('./routePages')
 const routeImages 	= require('./routeImages')
 const routeJSON 	= require('./routeJSON')
+
 
 reload(app)
 
