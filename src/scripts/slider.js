@@ -1,5 +1,7 @@
 var l = console.log
 
+l('slider connected')
+findSlider()
 
 document.addEventListener('DOMContentLoaded', () => {
 	app.add(findSlider)
@@ -17,6 +19,7 @@ function findSlider(){
 }
 
 function Slider(options){
+	l('new slider')
 	var slider = options.elem
 	var sliderWrapper = slider.parentElement
 	var sliderArrowLeft = slider.querySelector('.slider__left-arrow')
@@ -74,7 +77,7 @@ function Slider(options){
 			if(!slider.dragged && Math.abs(e.clientX - startX) > 3){
 				slider.dragged = true
 				imgBlock.style.transition = '0s'
-				imgBlock.style.cursor = 'default'
+				imgBlock.style.cursor = 'move'//'default'
 			}
 			if(!slider.dragged) return
 

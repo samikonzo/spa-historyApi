@@ -147,62 +147,95 @@ var app = (function(){
 	function replaceContent(html){
 		if(!ui.content.innerHTML){ // no old html
 			ui.content.style.opacity = 0
-
 			setTimeout(()=>{
 				ui.content.style.transition = '1s'
 				setTimeout(() => {
-					//deploy new html
-					ui.content.innerHTML = html
-					//check for apps
-					_refreshApps()
-
-					//dont work here
-					//idk why, css...
-					//resizeContentWrapper()
-
-					ui.content.style.opacity = 1
-
-					setTimeout(() => {
-						ui.content.style.transition = ''
-						resizeContentWrapper()												
-					},1000)
+					replaceContentAndShow()
 				}, 100)
-
 			}, 10)
 
-		} else { //remove old html
+		} else { //hide old html
 			ui.content.style.transition = '1s'
 			setTimeout(()=>{
 				ui.content.style.opacity = 0
 
 				setTimeout(() => {
-					//deploy new html
-					ui.content.innerHTML = html
-					//check for apps
-					_refreshApps()
-
-					//dont work here
-					//idk why, css...
-					//resizeContentWrapper()
-
-					ui.content.style.opacity = 1
-
-					setTimeout(() => {
-						ui.content.style.transition = ''	
-						resizeContentWrapper()
-					},1000)
+					replaceContentAndShow()
 				}, 1000)
 			}, 10)
 		}
 
+		function replaceContentAndShow(){
+			//deploy new html
+			ui.content.innerHTML = html
+
+			//load scripts
+			var scripts = ui.content.querySelectorAll('script')
+			scripts = [].map.call(scripts, script => script.getAttribute('src'))
+			var scriptLoaded = loadScripts(scripts)
+
+			//check for apps
+			//_refreshApps()
+			scriptLoaded.then(
+				load => {
+					_refreshApps()
+				}
+			)
+
+			ui.content.style.opacity = 1
+
+			//first try
+			setTimeout(resizeContentWrapper, 50)
+
+			setTimeout(() => {
+				ui.content.style.transition = ''
+				//if first try was wrong
+				resizeContentWrapper()	
+			},1000)
+		}
+
 		function resizeContentWrapper(){
-			l('height : ',ui.content.offsetHeight)
+			//l('height : ',ui.content.offsetHeight)
 			ui.contentWrapper.style.height = ui.content.offsetHeight + 'px';
 		}		
+
+		function loadScripts(scripts){
+			var promise = new Promise((resolve, reject) => {
+				l('loadScripts : ', scripts)
+				var script = scripts.splice(0,1)
+
+				loadScript(script).then(
+					loaded => {
+						if(scripts.length){
+							loadScripts(scripts).then(
+								loaded => resolve(true)
+							)
+						} else {
+							resolve(true)
+						}
+					}
+				)
+			})
+
+			function loadScript(script){
+				l('oneScript : ', script)
+
+				return new Promise( (resolve, reject) => {
+					var scriptEl = document.createElement('script')
+					scriptEl.setAttribute('src', script)
+					scriptEl.setAttribute('defer', true)
+					scriptEl.onload = resolve(true)					
+					document.body.appendChild(scriptEl)
+				})
+			}
+
+			return promise
+		}
 	}
 
 	// check some apps on page: sliders, and so..
 	function _refreshApps(){
+		l('_refreshApps()')
 		Object.keys(apps).forEach(findApp => {
 			apps[findApp]()
 		})
