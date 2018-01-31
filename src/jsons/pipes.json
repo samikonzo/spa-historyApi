@@ -1,0 +1,28 @@
+{
+	"goods" : [
+		{
+			"id" : "pipe_1",
+			"images" : [
+				"images/pipes/pipe_1/1.png",
+				"images/pipes/pipe_1/2.png",
+				"images/pipes/pipe_1/3.png",
+				"images/pipes/pipe_1/4.png"
+			],
+			"description" : "Трубка №1, произведенна из самых ценных пород дерева",
+			"title" : "Трубка №1",
+			"href" : "#"
+		},
+
+		{
+			"id" : "pipe_2",
+			"images" : [
+				"images/pipes/pipe_2/1.png",
+				"images/pipes/pipe_2/2.png",
+				"images/pipes/pipe_2/3.png"
+			],
+			"description" : "Трубка №2, произведенна из наименее ценных пород дерева",
+			"title" : "Трубка №2, с относительно длинным названием",
+			"href" : "#"
+		}
+	]
+}

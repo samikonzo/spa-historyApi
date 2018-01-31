@@ -29,6 +29,8 @@ function Slider(options){
 	var currentImageNumber = -1;
 
 	// get data and show first img
+	// if url = /:path => location.pathname.substr(1)
+	// else url = / => getMainPage()
 	var path = 'getJSON/' + (location.pathname.substr(1) || app.getMainPage())// change for something
 	getData(path).then(
 		json => {
@@ -231,20 +233,24 @@ function Slider(options){
 
 }
 
-function getData(path){
-	return new Promise( (resolve, reject) => {
-		var xhr = new XMLHttpRequest()
-		xhr.open('POST', path)
-		xhr.send()
-		xhr.onload = function(){
-			if(this.status == 200){
-				resolve(this.response)
-			} else {
-				var err = new Error(this.statusText)
-				err.code = this.status
-				reject(err)
+/* 
+	//replaced to script.js cuz used too often
+
+	function getData(path){
+		return new Promise( (resolve, reject) => {
+			var xhr = new XMLHttpRequest()
+			xhr.open('POST', path)
+			xhr.send()
+			xhr.onload = function(){
+				if(this.status == 200){
+					resolve(this.response)
+				} else {
+					var err = new Error(this.statusText)
+					err.code = this.status
+					reject(err)
+				}
 			}
-		}
-	})
-}
+		})
+	}
+*/
 

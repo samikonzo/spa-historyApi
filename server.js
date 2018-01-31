@@ -24,8 +24,7 @@ app.use((req, res, next) => {
 	l(req.method,'req.url : ', req.url)
 	next()
 })
-
-var staticOptions = {
+ var staticOptions = {
 	/*dotfiles: 'ignore',
 	etag: false,
 	extensions: ['htm', 'html'],

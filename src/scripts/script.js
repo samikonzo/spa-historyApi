@@ -194,10 +194,7 @@ var app = (function(){
 			},1000)
 		}
 
-		function resizeContentWrapper(){
-			//l('height : ',ui.content.offsetHeight)
-			ui.contentWrapper.style.height = ui.content.offsetHeight + 'px';
-		}		
+			
 
 		function loadScripts(scripts){
 			var promise = new Promise((resolve, reject) => {
@@ -232,6 +229,12 @@ var app = (function(){
 		}
 	}
 
+	//resizing function
+	function resizeContentWrapper(){
+		//l('height : ',ui.content.offsetHeight)
+		ui.contentWrapper.style.height = ui.content.offsetHeight + 'px';
+	}	
+
 	// check some apps on page: sliders, and so..
 	function _refreshApps(){
 		//l('_refreshApps()')
@@ -255,7 +258,8 @@ var app = (function(){
 		init		: init,
 		add 		: addApp,
 		getMainPage : getMainPage,
-		navigate 	: navigateFromOutSpace
+		navigate 	: navigateFromOutSpace,
+		resize 		: resizeContentWrapper
 	}
 })()
 
@@ -270,3 +274,19 @@ document.addEventListener('DOMContentLoaded', () => {
 	setTimeout(showHeader, 1000)
 })
 
+function getData(path){
+	return new Promise( (resolve, reject) => {
+		var xhr = new XMLHttpRequest()
+		xhr.open('POST', path)
+		xhr.send()
+		xhr.onload = function(){
+			if(this.status == 200){
+				resolve(this.response)
+			} else {
+				var err = new Error(this.statusText)
+				err.code = this.status
+				reject(err)
+			}
+		}
+	})
+}
