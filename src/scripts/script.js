@@ -201,7 +201,7 @@ var app = (function(){
 
 		function loadScripts(scripts){
 			var promise = new Promise((resolve, reject) => {
-				l('loadScripts : ', scripts)
+				//l('loadScripts : ', scripts)
 				var script = scripts.splice(0,1)
 
 				loadScript(script).then(
@@ -218,8 +218,7 @@ var app = (function(){
 			})
 
 			function loadScript(script){
-				l('oneScript : ', script)
-
+				//l('oneScript : ', script)
 				return new Promise( (resolve, reject) => {
 					var scriptEl = document.createElement('script')
 					scriptEl.setAttribute('src', script)
@@ -235,7 +234,7 @@ var app = (function(){
 
 	// check some apps on page: sliders, and so..
 	function _refreshApps(){
-		l('_refreshApps()')
+		//l('_refreshApps()')
 		Object.keys(apps).forEach(findApp => {
 			apps[findApp]()
 		})
