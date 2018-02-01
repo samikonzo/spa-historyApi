@@ -58,14 +58,14 @@ var app = (function(){
 	function _bindHandlers(){
 		ui.body.addEventListener('click', e=>{
 			var target = e.target
-			/*if(target.nodeName == 'LI' && target.dataset.link == 'ajax'){
+			if(target.nodeName == 'LI' && target.dataset.link == 'ajax'){
 				_navigate(e)
 				return
-			}*/
-
-			if(target.dataset.link == 'ajax'){
-				_navigate(e)
 			}
+
+			/*if(target.dataset.link == 'ajax'){
+				_navigate(e)
+			}*/
 		})
 
 		window.onpopstate = _popState;
@@ -184,6 +184,7 @@ var app = (function(){
 			scriptLoaded.then(
 				load => {
 					_refreshApps()
+					resizeContentWrapper()
 				}
 			)
 
@@ -242,7 +243,7 @@ var app = (function(){
 
 	//resizing function
 	function resizeContentWrapper(){
-		//l('height : ',ui.content.offsetHeight)
+		l('height : ',ui.content.offsetHeight)
 		ui.contentWrapper.style.height = ui.content.offsetHeight + 'px';
 	}	
 

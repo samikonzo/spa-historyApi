@@ -33,7 +33,7 @@ function Slider(options){
 	slider.autoslide = {
 		status : options.autoslide 
 	}
-	const autoslideTimer = 5000
+	const autoslideTimer = 10000
 
 	// getData script is global
 	// get data and show first img
@@ -136,8 +136,8 @@ function Slider(options){
 			
 			//redirect if only click
 			if(distance < 2 && e.target != sliderArrowLeft && e.target != sliderArrowRight){
-				//l(imgBlock.href)
-				//app.navigate(imgBlock.href)
+				l(imgBlock.href)
+				app.navigate(imgBlock.href)
 				return
 			}
 
@@ -195,11 +195,12 @@ function Slider(options){
 		// img parameters
 		img.src = currentImage.src
 		img.setAttribute('href', currentImage.href)
-		//imgBlock.href = currentImage.href
-		imgBlock.setAttribute('href', currentImage.href)
-		imgBlock.dataset.link = 'ajax'
+		imgBlock.href = currentImage.href
+		//imgBlock.setAttribute('href', currentImage.href)
+		//imgBlock.dataset.link = 'ajax'
 		img.onload = function(){
 			img.classList.remove('slider-imageBlock__image--hidden')
+			app.resize()
 		}
 		imgTitle.innerHTML = currentImage.title
 
@@ -268,25 +269,4 @@ function Slider(options){
 	}
 
 }
-
-/* 
-	//replaced to script.js cuz used too often
-
-	function getData(path){
-		return new Promise( (resolve, reject) => {
-			var xhr = new XMLHttpRequest()
-			xhr.open('POST', path)
-			xhr.send()
-			xhr.onload = function(){
-				if(this.status == 200){
-					resolve(this.response)
-				} else {
-					var err = new Error(this.statusText)
-					err.code = this.status
-					reject(err)
-				}
-			}
-		})
-	}
-*/
 

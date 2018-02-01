@@ -53,6 +53,9 @@ function Gallery(options){
 				clearTimeout(good.timer)
 			})
 
+			// deactivate 
+			gallery.status.active = false
+
 		} else {
 			gallery.status.timer.timerId = setTimeout(f, 1000)
 		}
@@ -95,6 +98,7 @@ function Gallery(options){
 		img.src = good.images[0]
 		img.onload = function(){
 			img.classList.remove('gallery-goodBlock__image--hidden')
+			app.resize()
 		}
 		imgTitle.innerHTML = good.title
 
@@ -139,10 +143,10 @@ function Gallery(options){
 					// if no active => > no loading
 					good.timer = setTimeout(function f(){
 						if(gallery.status.active){
-							//l('gallery.status.active : ', gallery.status.active)
+							l('gallery.status.active : ', gallery.status.active)
 							goodBlock.nextImg()
 						} else {
-							//l(' NO ACTIVE!!')
+							l(' NO ACTIVE!!')
 							good.timer = setTimeout(f, randomTime(changeTimeMin, changeTimeMax))
 						}
 
@@ -151,7 +155,7 @@ function Gallery(options){
 			}
 		}
 		// start nextimg
-		setTimeout(goodBlock.nextImg, randomTime(changeTimeMin, changeTimeMax))
+		good.timer = setTimeout(goodBlock.nextImg, randomTime(changeTimeMin, changeTimeMax))
 
 		function randomTime(min, max){
 			return min + Math.round(Math.random() * (max - min))
