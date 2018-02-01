@@ -58,7 +58,12 @@ var app = (function(){
 	function _bindHandlers(){
 		ui.body.addEventListener('click', e=>{
 			var target = e.target
-			if(target.nodeName == 'LI' && target.dataset.link == 'ajax'){
+			/*if(target.nodeName == 'LI' && target.dataset.link == 'ajax'){
+				_navigate(e)
+				return
+			}*/
+
+			if(target.dataset.link == 'ajax'){
 				_navigate(e)
 			}
 		})
@@ -229,6 +234,12 @@ var app = (function(){
 		}
 	}
 
+	//bind resize when window resize 
+	window.addEventListener('resize', e => {
+		l('resize')
+		trottledResizeContentWrapper()
+	})
+
 	//resizing function
 	function resizeContentWrapper(){
 		//l('height : ',ui.content.offsetHeight)
@@ -253,6 +264,32 @@ var app = (function(){
 	function getMainPage(){
 		return config.mainPage
 	}
+
+	//trottle function 
+	function trottle(f, time){
+		function trottled(){
+			if(trottled.busy){
+				trottled.savedContext = this;
+				trottled.savedArgs = arguments;
+			} else {
+				trottled.busy = true;
+				setTimeout(function(){
+					trottled.busy = false;
+
+					if(trottled.savedArgs){
+						trottled.apply(trottled.savedContext, trottled.savedArgs);
+						delete trottled.savedArgs;
+					}
+				} ,time)
+
+				f.apply(this,arguments);
+			}
+		}
+
+		return trottled
+	}
+
+	var trottledResizeContentWrapper = trottle(resizeContentWrapper, 400)
 
 	return {
 		init		: init,
@@ -290,3 +327,5 @@ function getData(path){
 		}
 	})
 }
+
+//

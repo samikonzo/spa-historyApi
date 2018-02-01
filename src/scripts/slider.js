@@ -24,10 +24,18 @@ function Slider(options){
 	var sliderWrapper = slider.parentElement
 	var sliderArrowLeft = slider.querySelector('.slider__left-arrow')
 	var sliderArrowRight = slider.querySelector('.slider__right-arrow')
+	var currentImageNumber = -1;
 	var images
 	var distance
-	var currentImageNumber = -1;
+	var sliderMouseOver = false
+	
+	//autoslide setup
+	slider.autoslide = {
+		status : options.autoslide 
+	}
+	const autoslideTimer = 5000
 
+	// getData script is global
 	// get data and show first img
 	// if url = /:path => location.pathname.substr(1)
 	// else url = / => getMainPage()
@@ -103,8 +111,6 @@ function Slider(options){
 				//sliderArrowRight.classList.remove('slider__right-arrow--highlight')
 				//sliderArrowLeft.classList.remove('slider__left-arrow--highlight')
 			}
-			
-
 
 			// move imgBlock
 			var newLeft = +startImgBlockLeft + e.clientX - startX
@@ -131,7 +137,7 @@ function Slider(options){
 			//redirect if only click
 			if(distance < 2 && e.target != sliderArrowLeft && e.target != sliderArrowRight){
 				//l(imgBlock.href)
-				app.navigate(imgBlock.href)
+				//app.navigate(imgBlock.href)
 				return
 			}
 
@@ -141,6 +147,18 @@ function Slider(options){
 				imgBlock.style.left = '0px';
 			}
 		}
+	})
+
+	//pause autoslide
+	slider.addEventListener('mouseover', function(e){
+		slider.autoslide.pause = true
+		autoslideStop()
+	})
+
+	//remove pause from autoslide
+	slider.addEventListener('mouseout', function(e){
+		slider.autoslide.pause = false
+		if(slider.autoslide.status) autoslideRun()
 	})
 
 
@@ -177,7 +195,9 @@ function Slider(options){
 		// img parameters
 		img.src = currentImage.src
 		img.setAttribute('href', currentImage.href)
-		imgBlock.href = currentImage.href
+		//imgBlock.href = currentImage.href
+		imgBlock.setAttribute('href', currentImage.href)
+		imgBlock.dataset.link = 'ajax'
 		img.onload = function(){
 			img.classList.remove('slider-imageBlock__image--hidden')
 		}
@@ -229,6 +249,22 @@ function Slider(options){
 				})
 
 		}, 50)
+	}
+
+	//autoslide run
+	if(slider.autoslide.status) autoslideRun()
+
+	function autoslideRun(){
+		slider.autoslide.timer = setTimeout(function f(){
+			sliderArrowRight.click()
+			if(slider.autoslide.status /* && !slider.autoslide.pause*/){
+				slider.autoslide.timer = setTimeout(f, autoslideTimer)
+			}
+		}, autoslideTimer)
+	}
+
+	function autoslideStop(){
+		clearTimeout(slider.autoslide.timer)
 	}
 
 }

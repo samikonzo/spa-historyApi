@@ -1,4 +1,7 @@
 var l = console.log
+var changeTime = 500 // auto change img ms
+var changeTimeMin = 3000
+var changeTimeMax = 10000
 
 l('gallery connected')
 findGallery()
@@ -19,11 +22,47 @@ function Gallery(options){
 	var gallery = options.elem
 	var galleryWrapper = gallery.parentElement
 	var goods 
+	var path
+
+
+	// change page activity
+	gallery.status = {
+		active : true,
+		href : location.pathname.substr(1),
+		timer : {}
+	}
+	gallery.status.timer.timerId = setTimeout(function f(){
+		
+		if(gallery.status.timer.last == undefined){
+			gallery.status.timer.last = performance.now()
+		} else {
+			var timeDifference = performance.now() - gallery.status.timer.last - 1000
+			gallery.status.timer.last = performance.now()
+
+			if(timeDifference > 100){
+				gallery.status.active = false
+			} else {
+				gallery.status.active = true
+			}
+		}
+
+		//if page changed stop loading and checking activity
+		if(location.pathname.substr(1) != gallery.status.href){
+			//remove all timeouts
+			goods.forEach(good => {
+				clearTimeout(good.timer)
+			})
+
+		} else {
+			gallery.status.timer.timerId = setTimeout(f, 1000)
+		}
+	}, 1000)
+
 
 	// get data	
 	// if url = /:path => location.pathname.substr(1)
 	// else url = / => getMainPage()
-	var path = 'getJSON/'  + (location.pathname.substr(1) || app.getMainPage())
+	path = 'getJSON/'  + (location.pathname.substr(1) || app.getMainPage())
 	getData(path).then(
 		json => {
 			goods = JSON.parse(json).goods
@@ -37,7 +76,7 @@ function Gallery(options){
 	)
 
 	function placeGood(good){
-		l(good)
+		//l(good)
 
 		// create new block
 		// template, didnt hear bout?
@@ -78,17 +117,18 @@ function Gallery(options){
 
 			function hideCurrent(){
 				return new Promise((resolve, reject) => {
-					goodBlock.img.style.transition = '1s'
+					goodBlock.img.style.transition = changeTime/1000 + 's'
 					setTimeout(() => {
 						goodBlock.img.style.opacity = 0;
 
 						setTimeout(() => {
 							resolve()
-						}, 1000)
+						}, changeTime)
 					}, 50)
 				})
 			}
 
+			//show next and load next next
 			function showNext(){
 				goodBlock.img.src = good.images[goodBlock.imgNum]
 				goodBlock.img.style.opacity = 1;
@@ -96,13 +136,26 @@ function Gallery(options){
 				setTimeout(()=>{
 					goodBlock.img.style.transition = ''
 
-					setTimeout(()=>{
-						goodBlock.nextImg()
-					}, 3000)
-				}, 1000)
+					// if no active => > no loading
+					good.timer = setTimeout(function f(){
+						if(gallery.status.active){
+							//l('gallery.status.active : ', gallery.status.active)
+							goodBlock.nextImg()
+						} else {
+							//l(' NO ACTIVE!!')
+							good.timer = setTimeout(f, randomTime(changeTimeMin, changeTimeMax))
+						}
+
+					}, randomTime(changeTimeMin, changeTimeMax))
+				}, changeTime)
 			}
 		}
-		setTimeout(goodBlock.nextImg, 3000)
+		// start nextimg
+		setTimeout(goodBlock.nextImg, randomTime(changeTimeMin, changeTimeMax))
+
+		function randomTime(min, max){
+			return min + Math.round(Math.random() * (max - min))
+		}
 
 		//bind change page
 		goodBlock.onclick = function(){
