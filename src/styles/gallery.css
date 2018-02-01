@@ -1,0 +1,32 @@
+.gallery-wrapper{
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	align-content: space-around;
+}
+
+.gallery-goodBlock{
+	width: 200px;
+	height: 300px;
+	border:1px solid;
+	overflow: hidden;
+	position: relative;
+	display: inline-block;
+}
+
+.gallery-goodBlock__image{
+	width:200px;
+}
+
+.gallery-goodBlock__image--hidden{
+
+}
+
+.gallery-goodBlock__image-title{
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	background: white;
+	text-align: center;
+	border-top: 1px solid;
+}
