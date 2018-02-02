@@ -113,9 +113,50 @@ var app = (function(){
 			return
 		}
 
+		var getNewContentPromise = new Promise((resolve, reject) => {
+			var url = 'pages/' + page
+			var xhr = new XMLHttpRequest()
+			xhr.open('GET', url)
+			xhr.send()
+
+			xhr.onload = function(){
+				if(this.status == 200){
+					resolve(this.response)
+				} else {
+					var err = new Error(this.statusText)
+					err.code = this.status
+					reject(err)
+				}
+			}
+			xhr.onerror = function(){
+				var err = new Error(this.statusText)
+				err.code = this.status
+				reject(err)
+			}
+		})	
+
+		getNewContentPromise.then(
+			html => {replaceContent(html)},
+			err => {}
+		)
+
+		function replaceContent(html){
+			/*	hide old
+			*	load scripts if needed
+			*		app.scripts 
+			*			app.scripts[script].run()
+			*
+			*	replace content
+			*	
+			*
+			*/			
+
+
+		}
+/*
 		// promise
 		var promise = new Promise((resolve, reject) => {
-			var url = 'pages/' + page
+			var url = 'pages/' + page	
 			var pageTitle = config.pages[page].title
 			var menu = config.pages[page].menu
 			
@@ -147,9 +188,10 @@ var app = (function(){
 			html => replaceContent(html),
 			error => l(error)
 		)
+*/
 	}
 
-	function replaceContent(html){
+	/*function replaceContent(html){
 		if(!ui.content.innerHTML){ // no old html
 			ui.content.style.opacity = 0
 			setTimeout(()=>{
@@ -179,11 +221,9 @@ var app = (function(){
 			scripts = [].map.call(scripts, script => script.getAttribute('src'))
 			var scriptLoaded = loadScripts(scripts)
 
-			//check for apps
-			//_refreshApps()
 			scriptLoaded.then(
 				load => {
-					_refreshApps()
+					//_refreshApps()
 					resizeContentWrapper()
 				}
 			)
@@ -233,7 +273,7 @@ var app = (function(){
 
 			return promise
 		}
-	}
+	}*/
 
 	//bind resize when window resize 
 	window.addEventListener('resize', e => {
