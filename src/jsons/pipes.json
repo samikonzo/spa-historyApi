@@ -1,106 +1,123 @@
 {
-	"goods" : [
-		{
-			"id" : "pipe_1",
-			"images" : [
-				"images/pipes/pipe_1/1.png",
-				"images/pipes/pipe_1/2.png",
-				"images/pipes/pipe_1/3.png",
-				"images/pipes/pipe_1/4.png"
-			],
-			"description" : "Трубка №1, произведенна из самых ценных пород дерева",
-			"title" : "Трубка №1",
-			"href" : "#"
-		},
+	"gallery" : {
+		"items" : [
+			{
+				"id" : "pipe_1",
+				"images" : [
+					"1.png",
+					"2.png",
+					"3.png",
+					"4.png"
+				],
+				"description" : "Трубка №1, произведенна из самых ценных пород дерева",
+				"title" : "Трубка №1",
+				"href" : "#"
+			},
 
-		{
-			"id" : "pipe_2",
-			"images" : [
-				"images/pipes/pipe_2/1.png",
-				"images/pipes/pipe_2/2.png",
-				"images/pipes/pipe_2/3.png"
-			],
-			"description" : "Трубка №2, произведенна из наименее ценных пород дерева",
-			"title" : "Трубка №2, с относительно длинным названием",
-			"href" : "#"
-		},
+			{
+				"id" : "pipe_2",
+				"images" : [
+					"1.png",
+					"2.png",
+					"3.png"
+				],
+				"description" : "Трубка №2, произведенна из наименее ценных пород дерева",
+				"title" : "Трубка №2, с относительно длинным названием",
+				"href" : "#"
+			},
 
-		{
-			"id" : "pipe_3",
-			"images" : [
-				"images/pipes/pipe_3/1.png",
-				"images/pipes/pipe_3/2.png",
-				"images/pipes/pipe_3/3.png",
-				"images/pipes/pipe_3/4.png"
-			],
-			"description" : "Трубка №3, произведенна из самых ценных пород дерева",
-			"title" : "Трубка №3",
-			"href" : "#"
-		},
+			{
+				"id" : "pipe_3",
+				"images" : [
+					"1.png",
+					"2.png",
+					"3.png",
+					"4.png"
+				],
+				"description" : "Трубка №3, произведенна из самых ценных пород дерева",
+				"title" : "Трубка №3",
+				"href" : "#"
+			},
 
-		{
-			"id" : "pipe_4",
-			"images" : [
-				"images/pipes/pipe_4/1.png",
-				"images/pipes/pipe_4/2.png",
-				"images/pipes/pipe_4/3.png",
-				"images/pipes/pipe_4/4.png"
-			],
-			"description" : "Трубка №4, произведенна из самых ценных пород дерева",
-			"title" : "Трубка №4",
-			"href" : "#"
-		},
+			{
+				"id" : "pipe_4",
+				"images" : [
+					"1.png",
+					"2.png",
+					"3.png",
+					"4.png"
+				],
+				"description" : "Трубка №4, произведенна из самых ценных пород дерева",
+				"title" : "Трубка №4",
+				"href" : "#"
+			},
 
-		{
-			"id" : "pipe_5",
-			"images" : [
-				"images/pipes/pipe_5/1.png",
-				"images/pipes/pipe_5/2.png",
-				"images/pipes/pipe_5/3.png",
-				"images/pipes/pipe_5/4.png"
-			],
-			"description" : "Трубка №5, произведенна из самых ценных пород дерева",
-			"title" : "Трубка №5",
-			"href" : "#"
-		},
+			{
+				"id" : "pipe_5",
+				"images" : [
+					"1.png",
+					"2.png",
+					"3.png",
+					"4.png"
+				],
+				"description" : "Трубка №5, произведенна из самых ценных пород дерева",
+				"title" : "Трубка №5",
+				"href" : "#"
+			},
 
-		{
-			"id" : "pipe_6",
-			"images" : [
-				"images/pipes/pipe_6/1.png",
-				"images/pipes/pipe_6/2.png",
-				"images/pipes/pipe_6/3.png",
-				"images/pipes/pipe_6/4.png"
-			],
-			"description" : "Трубка №6, произведенна из самых ценных пород дерева",
-			"title" : "Трубка №6",
-			"href" : "#"
-		},
+			{
+				"id" : "pipe_6",
+				"images" : [
+					"1.png",
+					"2.png",
+					"3.png",
+					"4.png"
+				],
+				"description" : "Трубка №6, произведенна из самых ценных пород дерева",
+				"title" : "Трубка №6",
+				"href" : "#"
+			},
 
-		{
-			"id" : "pipe_7",
-			"images" : [
-				"images/pipes/pipe_7/1.png",
-				"images/pipes/pipe_7/2.png",
-				"images/pipes/pipe_7/3.png",
-				"images/pipes/pipe_7/4.png"
-			],
-			"description" : "Трубка №7, произведенна из самых ценных пород дерева",
-			"title" : "Трубка №7",
-			"href" : "#"
-		},
+			{
+				"id" : "pipe_7",
+				"images" : [
+					"1.png",
+					"2.png",
+					"3.png",
+					"4.png"
+				],
+				"description" : "Трубка №7, произведенна из самых ценных пород дерева",
+				"title" : "Трубка №7",
+				"href" : "#"
+			},
 
-		{
-			"id" : "pipe_8",
-			"images" : [
-				"images/pipes/pipe_8/1.png",
-				"images/pipes/pipe_8/2.png",
-				"images/pipes/pipe_8/3.png",
-				"images/pipes/pipe_8/4.png"
-			],
-			"description" : "Трубка №8, произведенна из самых ценных пород дерева",
-			"title" : "Трубка №8",
-			"href" : "#"
-		}
-	]
+			{
+				"id" : "pipe_8",
+				"images" : [
+					"1.png",
+					"2.png",
+					"3.png",
+					"4.png"
+				],
+				"description" : "Трубка №8, произведенна из самых ценных пород дерева",
+				"title" : "Трубка №8",
+				"href" : "#"
+			},
+
+			{
+				"id" : "pipe_9",
+				"images" : [
+					"1.png",
+					"2.png",
+					"3.png",
+					"4.png"
+				],
+				"description" : "Трубка №9, произведенна из самых ценных пород дерева",
+				"title" : "Трубка №9",
+				"href" : "#"
+			}
+		]
+	}
+
+	
 }

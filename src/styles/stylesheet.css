@@ -2,11 +2,13 @@ html, body {
 	padding: 0;
 	margin: 0;
 	width:100%;
+	max-width: 100%;
 	position: relative;
 }
 body{
 	max-width: 960px;
 	display: block;
+	overflow-x: hidden; 
 	margin: auto;
 }
 
@@ -35,20 +37,7 @@ header span{
 	color:black;
 	margin-right: 15px;
 	transition: 1s;
-	/* animation: showFullHeaderSpan 1.8s .5s forwards ease-in-out; */
 }
-
-/* @keyframes showFullHeaderSpan{
-	from{
-		max-width: 10px;
-		opacity: 1;
-	}
-
-	to{
-		max-width: 200px;
-		opacity: 1;
-	}
-} */
 
 .header--hidden span{
 	max-width:10px;
@@ -63,19 +52,7 @@ header span::after{
 	height: 100%;
 	box-sizing: border-box;
 	background: linear-gradient(90deg, transparent 10px, white);
-	/* animation: showFullHeaderSpanAfter 1.8s .5s forwards ease-in-out; */
 }
-
-/* @keyframes showFullHeaderSpanAfter{
-	from{
-		background: linear-gradient(90deg, transparent 10px, white);
-	}
-
-	to{
-		background: linear-gradient(90deg, transparent 100%, white);
-	}
-}
- */
 
 .nav{
 	width:100%;
@@ -150,13 +127,20 @@ header span::after{
 }
 
 .content-wrapper{
+	max-width: 100%;
 	height: 0px;
 	overflow: hidden;
 	transition: 1s;
+	padding: 0;
+	margin: 0;
 }
 
 .content{
-	min-height: 100px;
+	/* min-height: 100px; */
+	opacity: 1;
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
 	/* padding-bottom: 100px;  */
 }
 

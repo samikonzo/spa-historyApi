@@ -1,16 +1,6 @@
-;(function(){
-	var l = console.log
-	l('slider connected')
+var l = console.log
 
-	l(app)
-
-})()
-
-
-
-
-
-
+l('slider connected')
 /*findSlider()
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -27,7 +17,7 @@ function findSlider(){
 		})
 	})
 }*/
-/*
+
 function Slider(options){
 	l('new slider')
 	var slider = options.elem
@@ -268,7 +258,7 @@ function Slider(options){
 	function autoslideRun(){
 		slider.autoslide.timer = setTimeout(function f(){
 			sliderArrowRight.click()
-			if(slider.autoslide.status){
+			if(slider.autoslide.status /* && !slider.autoslide.pause*/){
 				slider.autoslide.timer = setTimeout(f, autoslideTimer)
 			}
 		}, autoslideTimer)
@@ -279,4 +269,3 @@ function Slider(options){
 	}
 }
 
-*/

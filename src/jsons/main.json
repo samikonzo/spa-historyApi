@@ -1,40 +1,47 @@
-{
-	"images" : [
-		{
-			"src" : "images/main/1.jpg",
-			"title" : "space",
-			"href" : "pipes"
-		},
+{	
+	"slider" : {
+		"images" : [
+			{
+				"src" : "images/main/1.jpg",
+				"title" : "space",
+				"href" : "pipes"
+			},
 
-		{
-			"src" : "images/main/2.jpg",
-			"title" : "girl",
-			"href" : "sculpts"
-		},
+			{
+				"src" : "images/main/2.jpg",
+				"title" : "girl",
+				"href" : "sculpts"
+			},
 
-		{
-			"src" : "images/main/3.jpg",
-			"title" : "autumn",
-			"href" : "tables"
-		},
+			{
+				"src" : "images/main/3.jpg",
+				"title" : "autumn",
+				"href" : "tables"
+			},
 
-		{
-			"src" : "images/main/4.gif",
-			"title" : "hands",
-			"href" : "other"
-		},
+			{
+				"src" : "images/main/4.gif",
+				"title" : "hands",
+				"href" : "other"
+			},
 
-		{
-			"src" : "images/main/5.jpg",
-			"title" : "feathers",
-			"href" : "gallery"
-		},
+			{
+				"src" : "images/main/5.jpg",
+				"title" : "feathers",
+				"href" : "gallery"
+			},
 
-		{
-			"src" : "images/pipes/pipe_1/1.png",
-			"title" : "tube #1",
-			"href" : "pipes"
+			{
+				"src" : "images/pipes/pipe_1/1.png",
+				"title" : "tube #1",
+				"href" : "pipes"
 
-		}
-	]
+			}
+		]	
+	},
+
+	"gallery" : {
+		
+	}
+	
 }

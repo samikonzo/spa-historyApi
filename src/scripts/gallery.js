@@ -1,170 +1,307 @@
-var l = console.log
-var changeTime = 500 // auto change img ms
-var changeTimeMin = 3000
-var changeTimeMax = 10000
+;(function(){
+	var l = console.log
+	l('gallery connected')
 
-l('gallery connected')
-findGallery()
-
-function findGallery(){
-	var gallerys = document.querySelectorAll('.gallery')
-
-	gallerys.forEach(gallery => {
-		new Gallery({
-			elem: gallery,
-			autoslide: true
-		})
-	})
-}
-
-function Gallery(options){
-	l('new gallery')
-	var gallery = options.elem
-	var galleryWrapper = gallery.parentElement
-	var goods 
-	var path
-
-
-	// change page activity
-	gallery.status = {
-		active : true,
-		href : location.pathname.substr(1),
-		timer : {}
-	}
-	gallery.status.timer.timerId = setTimeout(function f(){
+	/*
+	*	gallery API:
+	*		run will find gallerys on page
+	*		active - status of page activity
+	*		
+	*/
+		var galleryAPI = {
+			run 	: galleryRun,
+			active 	: true,
+			pageDownEvent : pageDownEvent,
+			changePageEvent : '',
+			gallerys : []
+		}
 		
-		if(gallery.status.timer.last == undefined){
-			gallery.status.timer.last = performance.now()
-		} else {
-			var timeDifference = performance.now() - gallery.status.timer.last - 1000
-			gallery.status.timer.last = performance.now()
-
-			if(timeDifference > 100){
-				gallery.status.active = false
-			} else {
-				gallery.status.active = true
-			}
-		}
-
-		//if page changed stop loading and checking activity
-		if(location.pathname.substr(1) != gallery.status.href){
-			//remove all timeouts
-			goods.forEach(good => {
-				clearTimeout(good.timer)
-			})
-
-			// deactivate 
-			gallery.status.active = false
-
-		} else {
-			gallery.status.timer.timerId = setTimeout(f, 1000)
-		}
-	}, 1000)
-
-
-	// get data	
-	// if url = /:path => location.pathname.substr(1)
-	// else url = / => getMainPage()
-	path = 'getJSON/'  + (location.pathname.substr(1) || app.getMainPage())
-	getData(path).then(
-		json => {
-			goods = JSON.parse(json).goods
-			goods.forEach(good => {
-				placeGood(good)
-			})
-		}, 
-		err => {
-			l(err)
-		}
-	)
-
-	function placeGood(good){
-		//l(good)
-
-		// create new block
-		// template, didnt hear bout?
-		var goodBlock = document.createElement('div')
-		var img = document.createElement('img')
-		var imgTitle = document.createElement('div')
-
-		goodBlock.classList.add('gallery-goodBlock')
-		img.classList ='gallery-goodBlock__image gallery-goodBlock__image--hidden'
-		imgTitle.classList.add('gallery-goodBlock__image-title')
-
-		goodBlock.setAttribute('href', good.href)
-		goodBlock.href = good.href
-		goodBlock.imgNum = 0
-		goodBlock.img = img
-		img.src = good.images[0]
-		img.onload = function(){
-			img.classList.remove('gallery-goodBlock__image--hidden')
-			app.resize()
-		}
-		imgTitle.innerHTML = good.title
-
-		goodBlock.appendChild(img)
-		goodBlock.appendChild(imgTitle)
-		gallery.appendChild(goodBlock)
-
-
-		//auto change img
-		goodBlock.nextImg = function(){
-			goodBlock.imgNum++
-			if(goodBlock.imgNum > good.images.length-1) goodBlock.imgNum = 0
-
-			var tempImg = document.createElement('img')
-			tempImg.src = good.images[goodBlock.imgNum]
-			tempImg.onload = function(){
-				hideCurrent()
-					.then(showNext)
-			}
-
-			function hideCurrent(){
-				return new Promise((resolve, reject) => {
-					goodBlock.img.style.transition = changeTime/1000 + 's'
-					setTimeout(() => {
-						goodBlock.img.style.opacity = 0;
-
-						setTimeout(() => {
-							resolve()
-						}, changeTime)
-					}, 50)
+		app.addScript('gallery', galleryAPI)
+	
+		function pageDownEvent(){
+			galleryAPI.gallerys.forEach(gallery => {
+				var widgetEvent = new CustomEvent('pageDownEvent', {
+					bubbles: true,
 				})
-			}
 
-			//show next and load next next
-			function showNext(){
-				goodBlock.img.src = good.images[goodBlock.imgNum]
-				goodBlock.img.style.opacity = 1;
+				gallery.elem.dispatchEvent(widgetEvent)
+			})
+		}
 
-				setTimeout(()=>{
-					goodBlock.img.style.transition = ''
+		function changePageEvent(){
+			galleryAPI.gallerys.forEach(gallery => {
+				gallery.elem.remove()
+			})
+		}
 
-					// if no active => > no loading
-					good.timer = setTimeout(function f(){
-						if(gallery.status.active){
-							l('gallery.status.active : ', gallery.status.active)
-							goodBlock.nextImg()
-						} else {
-							l(' NO ACTIVE!!')
-							good.timer = setTimeout(f, randomTime(changeTimeMin, changeTimeMax))
+
+	/*
+	* 	Gallery run:
+	*		get template if need
+	*		find gallery
+	*
+	*/
+		function galleryRun(){
+			getTemplate()
+				.then(
+					findGallery
+				)
+		}
+
+
+	/*
+	*	Get gallery item-template
+	*/
+		function getTemplate(){
+			return new Promise( (resolve, reject) => {
+				if(!Gallery.itemTemplate){
+					var tmpl = getPageHtml('gallery/template.html').then(
+						(html) => { 
+							Gallery.itemTemplate = html
+							resolve()
+						}
+					)
+				} else { resolve() }
+			})
+		}
+
+
+	/*
+	*	FindGallery
+	*		will find gallerys on page by runing from API
+	*
+	*/
+		function findGallery(){
+			var gallerys = document.querySelectorAll('.gallery')
+			gallerys.forEach(gallery => {
+				gallery = new Gallery({
+					elem: gallery,
+					time: {
+						changeTime : 500,
+						holdTime : 5000
+					}
+				})
+
+				galleryAPI.gallerys.push(gallery)
+			})
+		}
+
+
+
+	/*
+	*	
+	*	Gallery constructor
+	*
+	*/
+		function Gallery(options){
+			this.elem = options.elem
+
+			var gallery = options.elem
+			var galleryWrapper = gallery.parentElement
+			var path = location.pathname.substr(1) || app.getMainPage()
+			var currentLast = 0
+			var items 
+		
+			/*
+			*	Main bind
+			*/
+				gallery.addEventListener('pageDownEvent', galleryPageDownEvent, {once : true})
+
+				function galleryPageDownEvent(){
+					loadItems()
+						.then(
+							json => placeItems(json),
+							err => {
+								//l(err)
+							}
+						)
+						.then(
+							() => {gallery.addEventListener('pageDownEvent', galleryPageDownEvent, {once : true})},
+						)
+				}
+
+			/*  JSON to items
+			*	get data from server and put in items
+			*		by location.href
+			*		maybe by elem.name
+			*/
+				loadItems()
+					.then(
+						json => placeItems(json),
+						err => {l(err)}
+					)
+
+
+			/*
+			*	Load some items (4)
+			* 	
+			*/
+				function loadItems(){
+					return app.getData('getJSON/' + path, {
+						app 	: 'gallery',
+						request	: 'items',
+						start	: currentLast,
+						end		: currentLast + 4,
+					})
+				}
+
+			/*
+			*	Page Down Event Bind
+			*
+			*/
+				gallery.addEventListener('pageDownEvent', (e) => {
+
+				})
+
+
+
+			/*
+			*	Place items
+			*
+			*/
+				function placeItems(json){
+					return new Promise( (resolve, reject) => {
+						var items = JSON.parse(json)
+						items.forEach( (item, i, arr) => {
+							currentLast++
+							
+							if(i == arr.length - 1){
+								//last
+								placeItem(item)
+									.then(resolve, reject)
+							} else {
+								placeItem(item)
+								
+							}
+							
+
+						})
+					})
+				}
+
+
+			/*
+			*
+			*	Place gallery-item by tmplt
+			*
+			*/
+				function placeItem(item){
+					return new Promise( (resolve, reject) => {
+						var imgPath = `/images/${path}/${item.id}/`
+						var imgNum = 0
+						var img
+
+						/*
+						*	create itemBlock from Gallery.itemTemplate
+						*/
+							var itemHTML = _.template(Gallery.itemTemplate)({
+								href : item.href,
+								title : 'bebebe',
+								src : '',
+							})
+							var itemBlock = document.createElement('div')
+							itemBlock.innerHTML = itemHTML
+							itemBlock = itemBlock.firstElementChild
+							gallery.appendChild(itemBlock)
+							app.resize().then(resolve, reject)
+
+						/*
+						* bind img changing
+						*/
+							img = itemBlock.querySelector('.gallery-img-block__img')
+
+							img.addEventListener('load', () => {
+								img.classList.remove('gallery-img-block__img--hidden')
+								itemBlock.classList.remove('gallery-item--unready')
+							}, {once: true})
+
+						
+
+						loadNextImg(0)
+					
+
+
+						function loadNextImg(num){
+							if(!galleryAPI.active || !checkCurrentPage()){
+								setTimeout(loadNextImg, options.time.holdTime/2)
+								return
+							}
+
+							if(num == undefined) num = ++imgNum
+							if(num > item.images.length - 1) num = 0
+							imgNum = num
+
+							var tmpImg = document.createElement('img')
+							tmpImg.src = imgPath + item.images[num]
+
+							tmpImg.addEventListener('load', function(){
+								imgHide()
+									.then(() => {
+										img.src = tmpImg.src
+									})
+									.then(imgShow)
+									.then(setDefaultImgOpacity)
+									.then(
+										() => {
+											setTimeout(loadNextImg, options.time.holdTime)
+										}
+
+									)
+							})
 						}
 
-					}, randomTime(changeTimeMin, changeTimeMax))
-				}, changeTime)
-			}
-		}
-		// start nextimg
-		good.timer = setTimeout(goodBlock.nextImg, randomTime(changeTimeMin, changeTimeMax))
+						function imgHide(){
+							return new Promise(resolve => {
+								if(!img.src){ 
+									resolve()
+									return
+								}
+								//setCssPropValue(el, prop, value, time)
+								setCssPropValue(img, 'opacity', 0, options.time.changeTime/2/1000)
+									.then(resolve)
 
-		function randomTime(min, max){
-			return min + Math.round(Math.random() * (max - min))
+							})
+						}
+
+						function imgShow(){
+							return setCssPropValue(img, 'opacity', 1, options.time.changeTime/2/1000)
+						}
+
+						function setDefaultImgOpacity(){
+							img.style.opacity = ''
+					}
+
+					})
+				}
+
+
+			/*
+			*
+			*	Extra funciton
+			*
+			*/
+				//check current page
+				function checkCurrentPage(){
+					return (path == location.pathname.substr(1) || path == app.getMainPage())
+
+				}
+				
 		}
 
-		//bind change page
-		goodBlock.onclick = function(){
-			l(this.href)
-		}
 
-	}	
-}
+	/*
+	*
+	*	Extra funciton
+	*
+	*/
+
+
+
+})()
+
+
+
+
+
+
+
